@@ -19,10 +19,10 @@ function createMarcup(arr) {
 }
 container.insertAdjacentHTML('beforeend', createMarcup(galleryItems))
 container.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    if (evt.target.classList.contains(".gallery__item")) {
-        return;
-    }
+  evt.preventDefault();
+  if (evt.target.classList.contains(".gallery__item")) {
+    return;
+  }
   const galleryItem = evt.target.closest(".gallery_item")
   // console.log(evt.target.dataset)
   const { source } = evt.target.dataset;
@@ -30,11 +30,23 @@ container.addEventListener('click', (evt) => {
   const item = galleryItems.find((item) => item.original === source)
   console.log(item)
   
-const instance = basicLightbox.create(`
+  const instance = basicLightbox.create(`
     <img src="${item.original}" alt="${item.description}" width="800" height="600">
-`);
+`,
+  {
+  onShow: instance => {document.addEventListener("keydown" , closeModal)},
+  onClose: instance => {document.removeEventListener("keydown" , closeModal)},
+ }
+  );
+  
+  instance.show();
 
-instance.show();
+  function closeModal(evt) {
+  if (evt.code === "Escape") {
+    instance.close();
+    
+  }
+}
+});
 
-})
 
